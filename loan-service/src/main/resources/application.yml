@@ -1,0 +1,57 @@
+server:
+  port: 8181 
+  servlet:
+    context-path: /loan 
+    
+spring:
+  application:
+    name: loan-service 
+    
+  datasource:
+    
+    url: jdbc:oracle:thin:@localhost:1521:xe
+    username: rahul
+    password: rahul123 
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    
+ 
+ #Register with eureka server 
+ 
+eureka:
+  client:
+    serviceUrl:
+      defaultZone : http://localhost:8761/eureka/
+    
+#Resilience4j properties 
+resilience4j:
+  circuitbreaker:
+    instances:
+      creditscore-service:
+        register-health-indicator: true
+        event-consumer-buffer-size: 10
+        automatic-transition-from-open-to-half-open-enabled: true
+        failure-rate-threshold: 50
+        minimum-number-of-calls: 5
+        permitted-number-of-calls-in-half-open-state: 3
+        sliding-window-size: 10
+        wait-duration-in-open-state: 5s
+        sliding-window-type: count-based
+        
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+       # - health
+  endpoint:
+    health:
+      show-details: always
+        
+    
+  
